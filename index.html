@@ -1858,6 +1858,35 @@
 </div>
 
 <script>
+  /* =========================================================
+     CRM / LEAD TRACKING SETUP
+     ---------------------------------------------------------
+     Har enquiry (Contact Form + B2B Form) yahan se automatically
+     ek Google Sheet mein save ho jaayegi — naam, phone, destination,
+     date, message, source sab track hoga taaki koi follow-up miss na ho.
+
+     SETUP (ek baar karna hai):
+     1) Google Sheet banao, uspar "Extensions > Apps Script" kholo,
+        aur saath diye gaye Code.gs ka code paste karo.
+     2) "Deploy > New deployment > Web app" karo,
+        Execute as: Me, Who has access: Anyone — Deploy karo.
+     3) Jo Web App URL milega, use neeche paste karo.
+     Poori steps README file mein di gayi hain.
+  ========================================================= */
+  const CRM_WEBHOOK_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+  function logToCRM(data){
+    if(!CRM_WEBHOOK_URL || CRM_WEBHOOK_URL.indexOf('PASTE_YOUR') !== -1) return;
+    try{
+      fetch(CRM_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(Object.assign({ timestamp: new Date().toISOString() }, data))
+      }).catch(()=>{});
+    }catch(err){}
+  }
+
   document.querySelectorAll('.navlinks a').forEach(link=>{
     link.addEventListener('click',()=>{
       document.querySelectorAll('.navlinks a').forEach(l=>l.classList.remove('active'));
@@ -1892,6 +1921,15 @@
       if(date) text += `Travel Date: ${date}\n`;
       if(msg) text += `Message: ${msg}`;
 
+      logToCRM({
+        source: 'Contact Form',
+        name: name,
+        phone: phone,
+        destination: dest,
+        travelDate: date,
+        message: msg
+      });
+
       const url = `https://wa.me/919587370020?text=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
     });
@@ -1924,6 +1962,15 @@
       text += `Group Type: ${type}\n`;
       if(pax) text += `Number of People: ${pax}\n`;
       if(dest) text += `Destination / Dates: ${dest}`;
+
+      logToCRM({
+        source: 'B2B / Group Enquiry',
+        organisation: org,
+        contactPerson: contact,
+        groupType: type,
+        people: pax,
+        destination: dest
+      });
 
       const url = `https://wa.me/919587370020?text=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
