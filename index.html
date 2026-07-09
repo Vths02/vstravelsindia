@@ -26,14 +26,12 @@
     --muted:#5c6b7d;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth; overflow-x:hidden; width:100%;}
+  html{scroll-behavior:smooth;}
   body{
     font-family:'Inter',sans-serif;
     color:var(--ink);
     background:var(--sand);
     overflow-x:hidden;
-    width:100%;
-    position:relative;
   }
   h1,h2,h3,h4{font-family:'Poppins',sans-serif; color:var(--navy);}
   .script{font-family:'Caveat',cursive;}
@@ -1875,7 +1873,7 @@
      3) Jo Web App URL milega, use neeche paste karo.
      Poori steps README file mein di gayi hain.
   ========================================================= */
-  const CRM_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwHtiLeeIwxB9z5At6v_BCKrffGABWnIAElY3UKU0rK-6HpNyKM8SeZGha4p_IXAhTGKg/exec";
+  const CRM_WEBHOOK_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
   function logToCRM(data){
     if(!CRM_WEBHOOK_URL || CRM_WEBHOOK_URL.indexOf('PASTE_YOUR') !== -1) return;
@@ -1888,24 +1886,6 @@
       }).catch(()=>{});
     }catch(err){}
   }
-
-  // Mobile menu toggle — set up first & wrapped safely so it always works
-  try{
-    const burgerBtn = document.getElementById('burgerBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    if(burgerBtn && mobileMenu){
-      burgerBtn.addEventListener('click', ()=>{
-        mobileMenu.classList.toggle('open');
-        burgerBtn.textContent = mobileMenu.classList.contains('open') ? '✕' : '☰';
-      });
-      mobileMenu.querySelectorAll('a').forEach(a=>{
-        a.addEventListener('click', ()=>{
-          mobileMenu.classList.remove('open');
-          burgerBtn.textContent = '☰';
-        });
-      });
-    }
-  }catch(err){}
 
   document.querySelectorAll('.navlinks a').forEach(link=>{
     link.addEventListener('click',()=>{
@@ -2105,6 +2085,22 @@
     const msg = `Hi! I used the AI Budget Estimator for a ${days}-day trip to ${destName} for ${pax} people. Estimated budget: ${fmt(total)}. Can you share an exact quote?`;
     document.getElementById('ab-whatsapp').href = `https://wa.me/919587370020?text=${encodeURIComponent(msg)}`;
   });
+
+  // Mobile menu toggle
+  const burgerBtn = document.getElementById('burgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if(burgerBtn){
+    burgerBtn.addEventListener('click', ()=>{
+      mobileMenu.classList.toggle('open');
+      burgerBtn.textContent = mobileMenu.classList.contains('open') ? '✕' : '☰';
+    });
+    mobileMenu.querySelectorAll('a').forEach(a=>{
+      a.addEventListener('click', ()=>{
+        mobileMenu.classList.remove('open');
+        burgerBtn.textContent = '☰';
+      });
+    });
+  }
 
   // Header shadow on scroll + back-to-top visibility
   const headerEl = document.querySelector('header');
